@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Challenge Tracker - Login</title>
+  <meta name="description" content="Wähle dein Profil für den lokalen Challenge Tracker.">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="login.js"></script>
+</head>
+<body class="login-page">
+  <main class="login-shell">
+    <section class="login-card card" aria-labelledby="login-title">
+      <p class="eyebrow">Meplanes Challenge Tracker</p>
+      <h1 id="login-title">Wähle dein Profil</h1>
+      <p class="hero-text">
+        Erstes Login für den lokalen Wettkampf. Wähle Vinc oder Vale, dann öffnet sich der Tracker mit deinem Profil.
+      </p>
+
+      <div class="login-actions">
+        <button type="button" class="button button-primary" data-login-user="friend-a">Vinc</button>
+        <button type="button" class="button button-ghost" data-login-user="friend-b">Vale</button>
+      </div>
+
+      <p class="card-note login-note">Die Auswahl wird nur lokal im Browser gespeichert.</p>
+    </section>
+  </main>
+</body>
+</html>

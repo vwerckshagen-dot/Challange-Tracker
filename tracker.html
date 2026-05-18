@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Challenge Tracker</title>
+  <meta name="description" content="Lokaler Wochen- und Monatsvergleich für zwei Freunde mit Push-ups, Pull-ups und Laufkilometern.">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="main.js"></script>
+</head>
+<body id="top">
+  <a class="skip-link" href="#content">Zum Inhalt springen</a>
+
+  <section class="layout shell session-bar" aria-label="Sitzung" data-reveal>
+    <span class="session-brand">Challange Tracker</span>
+    <div class="session-actions">
+      <button type="button" class="button button-ghost" data-logout>Abmelden</button>
+    </div>
+  </section>
+
+  <main id="content" class="layout shell" tabindex="-1">
+    <section id="hero" class="hero grid-12" aria-labelledby="hero-title" data-reveal>
+      <div class="hero-copy">
+        <p class="eyebrow">Wöchentlicher Vergleich</p>
+        <h1 id="hero-title">Zwei Freunde, drei Disziplinen, ein klarer lokaler Überblick.</h1>
+        <p class="hero-text">
+          Ergebnisse für Push-ups, Pull-ups und Laufkilometer werden nur im Browser gespeichert.
+          Wochen- und Monatsansichten werden bei jedem Laden direkt aus den gespeicherten Wochen berechnet.
+        </p>
+      </div>
+
+      <aside class="summary-card card" aria-labelledby="summary-title">
+        <div class="card-head">
+          <p class="eyebrow">Live-Status</p>
+          <h2 id="summary-title">Kurzüberblick</h2>
+        </div>
+        <dl class="summary-grid" id="summary-grid">
+          <div>
+            <dt>Gespeicherte Wochen</dt>
+            <dd data-summary="weeks-count">0</dd>
+          </div>
+          <div>
+            <dt>Aktuelle Woche</dt>
+            <dd data-summary="current-week">-</dd>
+          </div>
+          <div>
+            <dt>Letzter Eintrag</dt>
+            <dd data-summary="last-saved">-</dd>
+          </div>
+        </dl>
+      </aside>
+    </section>
+
+    <section id="weekly" class="panel grid-12" aria-labelledby="weekly-title" data-reveal>
+      <div class="section-head">
+        <p class="eyebrow">Aktuelle Woche</p>
+        <h2 id="weekly-title">Wochenresultat</h2>
+        <p>
+          Der Vergleich zeigt jede Disziplin separat. Es wird keine künstliche Gesamtgewichtung eingeführt.
+        </p>
+      </div>
+
+      <article class="card result-card" data-result-card="weekly">
+        <header class="card-head result-head">
+          <div>
+            <p class="eyebrow">ISO-Woche</p>
+            <h3 data-week-label>Keine Daten</h3>
+          </div>
+          <span class="status-pill" data-week-state>Leer</span>
+        </header>
+        <div class="comparison-grid" data-comparison="weekly"></div>
+        <p class="card-note" data-empty-note="weekly">Noch kein Wochenstand gespeichert.</p>
+      </article>
+    </section>
+
+    <section id="monthly" class="panel grid-12" aria-labelledby="monthly-title" data-reveal>
+      <div class="section-head">
+        <p class="eyebrow">Monat</p>
+        <h2 id="monthly-title">Monatsresultat</h2>
+        <p>Alle Wochen des aktuellen Monats werden auf Basis des gespeicherten Wochenstarts zusammengefasst.</p>
+      </div>
+
+      <article class="card result-card" data-result-card="monthly">
+        <header class="card-head result-head">
+          <div>
+            <p class="eyebrow">Kalendermonat</p>
+            <h3 data-month-label>Keine Daten</h3>
+          </div>
+          <span class="status-pill" data-month-state>Leer</span>
+        </header>
+        <div class="comparison-grid" data-comparison="monthly"></div>
+        <p class="card-note" data-empty-note="monthly">Noch keine Wochen im aktuellen Monat gespeichert.</p>
+      </article>
+    </section>
+
+    <section id="entry" class="panel grid-12" aria-labelledby="entry-title" data-reveal>
+      <div class="section-head">
+        <p class="eyebrow">Neue Woche</p>
+        <h2 id="entry-title">Eintrag erfassen</h2>
+        <p>Ein Datum innerhalb der Woche wählen, die Werte eintragen und lokal speichern.</p>
+      </div>
+
+      <form class="card entry-form" id="result-form" novalidate>
+        <input type="hidden" name="editingWeekKey" value="">
+
+        <div class="form-row form-row-wide">
+          <label for="weekDate">Wochendatum</label>
+          <input id="weekDate" name="weekDate" type="date" required>
+          <p class="field-hint">Der Eintrag wird der ISO-Woche von Montag bis Sonntag zugeordnet. Mindestens ein Disziplinfeld ausfuellen.</p>
+        </div>
+
+        <div class="competitor-grid">
+          <fieldset class="competitor-card" data-user-fieldset="friend-a">
+            <legend>Vinc</legend>
+            <div class="form-row">
+              <label for="friendA-pushUps">Push-ups</label>
+              <input id="friendA-pushUps" name="friendA-pushUps" type="number" min="0" step="1" inputmode="numeric">
+            </div>
+            <div class="form-row">
+              <label for="friendA-pullUps">Pull-ups</label>
+              <input id="friendA-pullUps" name="friendA-pullUps" type="number" min="0" step="1" inputmode="numeric">
+            </div>
+            <div class="form-row">
+              <label for="friendA-runKm">Laufkilometer</label>
+              <input id="friendA-runKm" name="friendA-runKm" type="number" min="0" step="0.1" inputmode="decimal">
+            </div>
+          </fieldset>
+
+          <fieldset class="competitor-card" data-user-fieldset="friend-b">
+            <legend>Vale</legend>
+            <div class="form-row">
+              <label for="friendB-pushUps">Push-ups</label>
+              <input id="friendB-pushUps" name="friendB-pushUps" type="number" min="0" step="1" inputmode="numeric">
+            </div>
+            <div class="form-row">
+              <label for="friendB-pullUps">Pull-ups</label>
+              <input id="friendB-pullUps" name="friendB-pullUps" type="number" min="0" step="1" inputmode="numeric">
+            </div>
+            <div class="form-row">
+              <label for="friendB-runKm">Laufkilometer</label>
+              <input id="friendB-runKm" name="friendB-runKm" type="number" min="0" step="0.1" inputmode="decimal">
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="form-actions">
+          <p class="form-status" id="form-status" role="status" aria-live="polite">Bereit zum Speichern.</p>
+          <div class="button-row">
+            <button type="button" class="button button-ghost" data-cancel-edit hidden>Abbrechen</button>
+            <button type="submit" class="button button-primary" data-submit-label>Woche speichern</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <section id="history" class="panel grid-12" aria-labelledby="history-title" data-reveal>
+      <div class="section-head">
+        <p class="eyebrow">Verlauf</p>
+        <h2 id="history-title">Letzte Wochen</h2>
+        <p>Neue Einträge stehen oben. Jede Zeile lässt sich per Tastatur direkt wieder in das Formular laden.</p>
+      </div>
+
+      <div class="card history-card">
+        <div class="history-list" data-history-list></div>
+        <p class="card-note" data-empty-history>Noch keine Wochen gespeichert.</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
