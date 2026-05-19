@@ -3,13 +3,8 @@ const ACTIVE_USER_KEY = 'meplanes.challenge-tracker.active-user';
 const STORAGE_VERSION = 2;
 
 const USERS = [
-<<<<<<< HEAD
   { id: 'friend-a', label: 'Vinc' },
   { id: 'friend-b', label: 'Vale' },
-=======
-  { id: 'friend-a', label: 'Freund A' },
-  { id: 'friend-b', label: 'Freund B' },
->>>>>>> 770b5c6076b8b93a741a176beae8ea9465e7e68b
 ];
 
 const ENTRY_PREFIX = {
@@ -23,21 +18,14 @@ const DISCIPLINES = [
   { key: 'runKm', label: 'Laufkilometer', unit: 'km', fractionDigits: 1 },
 ];
 
-<<<<<<< HEAD
-let activeUserId = loadActiveUserId();
+const activeUserId = loadActiveUserId();
+let els = null;
+let state = defaultState();
 
 if (!activeUserId) {
   window.location.replace('index.html');
-}
-
-const els = {
-=======
-const els = {
-  currentUser: document.querySelector('[data-current-user]'),
-  authNote: document.querySelector('[data-auth-note]'),
-  loginButtons: document.querySelectorAll('[data-login-user]'),
-  storageStatus: document.getElementById('storage-status'),
->>>>>>> 770b5c6076b8b93a741a176beae8ea9465e7e68b
+} else {
+  els = {
   summaryWeeks: document.querySelector('[data-summary="weeks-count"]'),
   summaryCurrentWeek: document.querySelector('[data-summary="current-week"]'),
   summaryLastSaved: document.querySelector('[data-summary="last-saved"]'),
@@ -60,37 +48,27 @@ const els = {
   editingWeekKey: document.querySelector('input[name="editingWeekKey"]'),
   cancelEdit: document.querySelector('[data-cancel-edit]'),
   submitLabel: document.querySelector('[data-submit-label]'),
-<<<<<<< HEAD
   logoutButton: document.querySelector('[data-logout]'),
-=======
->>>>>>> 770b5c6076b8b93a741a176beae8ea9465e7e68b
   resetButtons: document.querySelectorAll('[data-reset-trigger]'),
   yearSlot: document.getElementById('year-slot'),
   skipLink: document.querySelector('.skip-link'),
   main: document.getElementById('content'),
   userFieldsets: document.querySelectorAll('[data-user-fieldset]'),
-};
+  };
 
-const revealTargets = document.querySelectorAll('[data-reveal]');
-let state = loadState();
-<<<<<<< HEAD
-=======
-let activeUserId = loadActiveUserId();
->>>>>>> 770b5c6076b8b93a741a176beae8ea9465e7e68b
+  state = loadState();
+  const revealTargets = document.querySelectorAll('[data-reveal]');
 
-document.documentElement.dataset.js = 'true';
-setCurrentYear();
-setupRevealObserver();
-setupSkipLinkFocus();
-setupForm();
-<<<<<<< HEAD
-setupLogoutButton();
-=======
-setupLoginButtons();
->>>>>>> 770b5c6076b8b93a741a176beae8ea9465e7e68b
-setupResetButtons();
-seedWeekDate();
-render();
+  document.documentElement.dataset.js = 'true';
+  setCurrentYear();
+  setupRevealObserver(revealTargets);
+  setupSkipLinkFocus();
+  setupForm();
+  setupLogoutButton();
+  setupResetButtons();
+  seedWeekDate();
+  render();
+}
 
 function defaultState() {
   return {
@@ -231,7 +209,6 @@ function setupForm() {
   els.cancelEdit.addEventListener('click', clearEditState);
 }
 
-<<<<<<< HEAD
 function setupLogoutButton() {
   if (!els.logoutButton) {
     return;
@@ -243,17 +220,8 @@ function setupLogoutButton() {
     } catch {
       /* sessionStorage unavailable */
     }
+
     window.location.href = 'index.html';
-=======
-function setupLoginButtons() {
-  els.loginButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-      setActiveUserId(button.getAttribute('data-login-user'));
-      render();
-      updateFormStatus(`Angemeldet als ${getActiveUser()?.label || 'Profil'}.`);
-      els.form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
->>>>>>> 770b5c6076b8b93a741a176beae8ea9465e7e68b
   });
 }
 
@@ -264,6 +232,10 @@ function setupResetButtons() {
 }
 
 function setupSkipLinkFocus() {
+  if (!els.skipLink || !els.main) {
+    return;
+  }
+
   els.skipLink.addEventListener('click', () => {
     requestAnimationFrame(() => {
       els.main.focus({ preventScroll: true });
@@ -271,7 +243,7 @@ function setupSkipLinkFocus() {
   });
 }
 
-function setupRevealObserver() {
+function setupRevealObserver(revealTargets) {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
     revealTargets.forEach((element) => element.classList.add('is-visible'));
     return;
@@ -302,56 +274,29 @@ function render() {
   const latestWeek = state.weeks[0] || null;
   const currentWeekLabel = currentWeek ? currentWeek.label : formatWeekLabelFromDate(today);
   const monthLabel = formatMonthLabel(today);
-<<<<<<< HEAD
   const editingWeek = els.editingWeekKey.value
     ? state.weeks.find((week) => week.weekStart === els.editingWeekKey.value) || null
     : null;
   const formWeek = editingWeek || currentWeek;
-=======
->>>>>>> 770b5c6076b8b93a741a176beae8ea9465e7e68b
 
   els.summaryWeeks.textContent = String(state.weeks.length);
   els.summaryCurrentWeek.textContent = currentWeekLabel;
   els.summaryLastSaved.textContent = latestWeek ? formatRelativeStamp(latestWeek.updatedAt) : 'Noch nichts gespeichert';
 
   renderLoginState();
-<<<<<<< HEAD
-  renderResultCard('weekly', els.weeklyCard, buildWeekSummary(currentWeek, today), currentWeekLabel);
-  renderResultCard('monthly', els.monthlyCard, buildMonthSummary(currentMonthWeeks, today), monthLabel);
-  renderHistory();
-  syncFormState(formWeek);
-=======
   updateStorageStatus();
   renderResultCard('weekly', els.weeklyCard, buildWeekSummary(currentWeek, today), currentWeekLabel);
   renderResultCard('monthly', els.monthlyCard, buildMonthSummary(currentMonthWeeks, today), monthLabel);
   renderHistory();
-  syncFormState(currentWeek);
->>>>>>> 770b5c6076b8b93a741a176beae8ea9465e7e68b
+  syncFormState(formWeek);
 }
 
 function renderLoginState() {
   const activeUser = getActiveUser();
-<<<<<<< HEAD
-=======
-  els.currentUser.textContent = activeUser ? `Aktiv: ${activeUser.label}` : 'Nicht angemeldet';
-
-  els.loginButtons.forEach((button) => {
-    const userId = button.getAttribute('data-login-user');
-    button.classList.toggle('is-active', activeUser?.id === userId);
-  });
-
-  els.authNote.textContent = activeUser
-    ? `Du bist als ${activeUser.label} angemeldet. Nur dieses Profil kann Werte für seine Seite erfassen.`
-    : 'Wähle dein Profil, um eigene Werte zu erfassen. Die Übersicht bleibt für beide sichtbar.';
->>>>>>> 770b5c6076b8b93a741a176beae8ea9465e7e68b
 
   els.userFieldsets.forEach((fieldset) => {
     const userId = fieldset.getAttribute('data-user-fieldset');
     const isActive = activeUser ? activeUser.id === userId : false;
-<<<<<<< HEAD
-    fieldset.hidden = !isActive;
-=======
->>>>>>> 770b5c6076b8b93a741a176beae8ea9465e7e68b
     fieldset.toggleAttribute('disabled', !isActive);
   });
 }
@@ -446,18 +391,12 @@ function syncFormState(currentWeek) {
   const activeUser = getActiveUser();
   const isLocked = !activeUser;
   els.entryForm.classList.toggle('is-locked', isLocked);
-<<<<<<< HEAD
   els.submitLabel.textContent = isLocked
     ? 'Zum Speichern anmelden'
-    : (els.editingWeekKey.value ? 'Eintrag aktualisieren' : 'Werte speichern');
+    : (els.editingWeekKey.value ? 'Eintrag aktualisieren' : 'Woche speichern');
   els.submitLabel.disabled = isLocked;
   els.cancelEdit.hidden = !els.editingWeekKey.value;
   els.weekDate.disabled = isLocked || Boolean(els.editingWeekKey.value);
-=======
-  els.submitLabel.textContent = activeUser ? 'Werte speichern' : 'Zum Speichern anmelden';
-  els.submitLabel.disabled = isLocked;
-  els.cancelEdit.hidden = !els.editingWeekKey.value;
->>>>>>> 770b5c6076b8b93a741a176beae8ea9465e7e68b
 
   if (isLocked) {
     updateFormStatus('Bitte oben anmelden, um eigene Werte einzutragen.');
@@ -472,18 +411,6 @@ function syncFormState(currentWeek) {
 
 function syncUserInputs(currentWeek) {
   const activeUser = getActiveUser();
-<<<<<<< HEAD
-  // Keep fields empty after normal save; only prefill while explicit edit mode is active.
-  const record = els.editingWeekKey.value ? (currentWeek || null) : null;
-
-  USERS.forEach((user) => {
-    const prefix = ENTRY_PREFIX[user.id];
-    const entry = activeUser && activeUser.id === user.id ? record?.entries?.[user.id] || null : null;
-    setCompetitorValues(prefix, entry);
-    const fieldset = document.querySelector(`[data-user-fieldset="${user.id}"]`);
-    if (fieldset) {
-      fieldset.hidden = !activeUser || activeUser.id !== user.id;
-=======
   const record = currentWeek || null;
 
   USERS.forEach((user) => {
@@ -492,7 +419,6 @@ function syncUserInputs(currentWeek) {
     setCompetitorValues(prefix, entry);
     const fieldset = document.querySelector(`[data-user-fieldset="${user.id}"]`);
     if (fieldset) {
->>>>>>> 770b5c6076b8b93a741a176beae8ea9465e7e68b
       fieldset.disabled = !activeUser || activeUser.id !== user.id;
     }
   });
@@ -513,48 +439,6 @@ function handleSubmit(event) {
     return;
   }
 
-<<<<<<< HEAD
-    if (!hasAtLeastOneDisciplineValue(activeUser.id)) {
-      updateFormStatus('Bitte mindestens ein Disziplinfeld ausfuellen.');
-      return;
-    }
-
-  const editingWeekKey = els.editingWeekKey.value;
-  const weekDate = parseDateInput(els.weekDate.value);
-  if (!weekDate && !editingWeekKey) {
-    updateFormStatus('Bitte ein gültiges Datum wählen.');
-    return;
-  }
-function hasAtLeastOneDisciplineValue(userId) {
-  const prefix = ENTRY_PREFIX[userId];
-  const pushUps = document.getElementById(`${prefix}-pushUps`).value.trim();
-  const pullUps = document.getElementById(`${prefix}-pullUps`).value.trim();
-  const runKm = document.getElementById(`${prefix}-runKm`).value.trim();
-  return pushUps !== '' || pullUps !== '' || runKm !== '';
-}
-
-  const targetWeekKey = editingWeekKey || toDateKey(startOfIsoWeek(weekDate));
-  const targetWeekDate = parseDateInput(targetWeekKey) || weekDate;
-  const weekStart = startOfIsoWeek(targetWeekDate);
-  const weekEnd = endOfIsoWeek(targetWeekDate);
-  const weekKey = toDateKey(weekStart);
-  const existingWeek = state.weeks.find((week) => week.weekStart === weekKey);
-  const submittedValues = readUserValues(activeUser.id);
-  const previousValues = existingWeek?.entries?.[activeUser.id] || null;
-  const shouldAccumulate = !editingWeekKey && previousValues;
-  const mergedValues = shouldAccumulate
-    ? {
-        pushUps: previousValues.pushUps + submittedValues.pushUps,
-        pullUps: previousValues.pullUps + submittedValues.pullUps,
-        runKm: toNumber(previousValues.runKm + submittedValues.runKm, 1),
-        submittedAt: new Date().toISOString(),
-      }
-    : submittedValues;
-
-  const updatedWeek = {
-    id: weekKey,
-    entryDate: existingWeek?.entryDate || els.weekDate.value || toDateInputValue(targetWeekDate),
-=======
   const weekDate = parseDateInput(els.weekDate.value);
   if (!weekDate) {
     updateFormStatus('Bitte ein gültiges Datum wählen.');
@@ -568,7 +452,6 @@ function hasAtLeastOneDisciplineValue(userId) {
   const updatedWeek = {
     id: weekKey,
     entryDate: els.weekDate.value,
->>>>>>> 770b5c6076b8b93a741a176beae8ea9465e7e68b
     weekStart: weekKey,
     weekEnd: toDateKey(weekEnd),
     label: formatWeekRange(weekStart, weekEnd),
@@ -576,11 +459,7 @@ function hasAtLeastOneDisciplineValue(userId) {
     updatedAt: new Date().toISOString(),
     entries: {
       ...(existingWeek?.entries || {}),
-<<<<<<< HEAD
-      [activeUser.id]: mergedValues,
-=======
       [activeUser.id]: readUserValues(activeUser.id),
->>>>>>> 770b5c6076b8b93a741a176beae8ea9465e7e68b
     },
   };
 
@@ -591,15 +470,7 @@ function hasAtLeastOneDisciplineValue(userId) {
   };
 
   persistState();
-<<<<<<< HEAD
-  updateFormStatus(
-    shouldAccumulate
-      ? `Werte für ${activeUser.label} hinzugefügt.`
-      : `Werte für ${activeUser.label} gespeichert.`
-  );
-=======
   updateFormStatus(`Werte für ${activeUser.label} gespeichert.`);
->>>>>>> 770b5c6076b8b93a741a176beae8ea9465e7e68b
   clearEditState(false);
   render();
 }
@@ -684,14 +555,6 @@ function persistState() {
 }
 
 function updateStorageStatus() {
-<<<<<<< HEAD
-=======
-  const activeUser = getActiveUser();
-  const prefix = activeUser ? `Angemeldet als ${activeUser.label} · ` : 'Nicht angemeldet · ';
-  els.storageStatus.textContent = state.weeks.length
-    ? `${prefix}${state.weeks.length} Wochen`
-    : `${prefix}keine Daten`;
->>>>>>> 770b5c6076b8b93a741a176beae8ea9465e7e68b
 }
 
 function updateFormStatus(message) {
@@ -719,11 +582,7 @@ function buildMonthSummary(weeks, monthDate) {
 
 function createSummary(weeks, label, totalBuckets) {
   const entries = USERS.reduce((accumulator, user) => {
-<<<<<<< HEAD
     accumulator[user.id] = null;
-=======
-    accumulator[user.id] = { pushUps: 0, pullUps: 0, runKm: 0 };
->>>>>>> 770b5c6076b8b93a741a176beae8ea9465e7e68b
     return accumulator;
   }, {});
 
@@ -741,13 +600,9 @@ function createSummary(weeks, label, totalBuckets) {
         continue;
       }
 
-<<<<<<< HEAD
       if (!entries[user.id]) {
         entries[user.id] = { pushUps: 0, pullUps: 0, runKm: 0 };
       }
-
-=======
->>>>>>> 770b5c6076b8b93a741a176beae8ea9465e7e68b
       entries[user.id].pushUps += entry.pushUps;
       entries[user.id].pullUps += entry.pullUps;
       entries[user.id].runKm += entry.runKm;
@@ -912,11 +767,7 @@ function toNumber(value, fractionDigits = 0) {
 }
 
 function setCurrentYear() {
-<<<<<<< HEAD
   if (els.yearSlot) {
     els.yearSlot.textContent = String(new Date().getFullYear());
   }
-=======
-  els.yearSlot.textContent = String(new Date().getFullYear());
->>>>>>> 770b5c6076b8b93a741a176beae8ea9465e7e68b
 }
